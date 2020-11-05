@@ -7,6 +7,8 @@ public class Search {
 	
 	public static int SAP;		//Simulated Annealing Percentage
 	public static int temperature = 25;
+	
+	
 
 	public static ArrayList<City[]> search(City[] cities) {
 		ArrayList<City[]> states = new ArrayList<City[]>();
