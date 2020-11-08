@@ -1,4 +1,5 @@
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Individual {
@@ -12,19 +13,33 @@ public class Individual {
 		this.route = createRoute(route);
 		this.distance = createRouteDistance();
 		this.fitness = createRouteFitness();
-		
 		this.index = -1;
 		
 	}
-	
-	public Individual(Individual i, int index) {
-		this.route = i.getRoute();
-		this.distance = i.getDistance();
-		this.fitness = i.getFitness();
+	//copy constructor
+	public Individual(Individual ind) {
 		
+		for(int i = 0; i < ind.getRoute().length; i++) {
+			this.route[i] = new City(ind.getRoute()[i]);
+		}
+		
+		this.distance = ind.getDistance();
+		this.fitness = ind.getFitness();
+		this.index = ind.getIndex();
+	}
+	
+	public Individual(Individual ind, int index) {
+	
+		for(int i = 0; i < ind.getRoute().length; i++) {
+			this.route[i] = new City(ind.getRoute()[i]);
+		}
+		
+		this.distance = ind.getDistance();
+		this.fitness = ind.getFitness();
 		this.index = index;
 	}
 	
+
 
 	public int getIndex() {
 		return this.index;
@@ -93,29 +108,50 @@ public class Individual {
 
 	// ****************************//
 
-	public void mutate() {
-
+	public static Individual mutate(Individual ind, double mutationRate) {
+		int swap = (int) Math.random() * ind.getRoute().length;
+		int swapWith = (int) Math.random() * ind.getRoute().length;
+		
+		if( Math.random()*100 < mutationRate) {
+			City temp = ind.getRoute()[swap];
+			ind.getRoute()[swap] = ind.getRoute()[swapWith];
+			ind.getRoute()[swapWith] = temp;
+		}
+		
+		return ind; 
 		
 		
 	}
 
-	public void breed(Individual parent1, Individual parent2) {
-		City[] childRoute = new City[parent1.getRoute().length];
+	public static Individual breed(Individual parent1, Individual parent2) {
+		City[] child = new City[parent1.getRoute().length];
 		
-		City[] p1Route = parent1.getRoute();
-		City[] p2Route = parent2.getRoute();
+		//City[] childP1 = new City[parent1.getRoute().length];
+		//City[] childP2 = new City[parent2.getRoute().length];
 		
-		int geneA = (int) Math.random() * p1Route.length;
-		int geneB = (int) Math.random() * p2Route.length;
+		int geneA = (int) Math.random() * parent1.getRoute().length;
+		int geneB = (int) Math.random() * parent2.getRoute().length;
 		
 		int startGene = Math.min(geneA, geneB);
 		int endGene = Math.max(geneA, geneB);
 		
-		int range = Math.abs(endGene - startGene);
-		
-		for(int i = 0; i < range; i++) {
-			
+		for(int i = startGene; i < endGene; i++) {
+			child[i] = parent1.getRoute()[i];		
 		}
+		
+		List<City> list = Arrays.asList(child);
+		
+		int index = 0;
+		for(int i = 0; i < parent1.getRoute().length; i++) {
+			if(index >= parent1.getRoute().length) {
+				break;
+			}
+			if(!list.contains(parent2.getRoute()[i])) {
+				child[index] = parent2.getRoute()[i];
+				index++;
+			}
+		}
+		return new Individual(child);
 	}
 
 }

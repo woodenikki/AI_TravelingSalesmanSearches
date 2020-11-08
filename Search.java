@@ -20,7 +20,7 @@ public class Search {
 			// Create a copy
 			//City[] sorted = hillClimb(cities);
 			//City[] sorted = simAnneal(cities, SAP);
-			City[] sorted = genetic(cities);
+			City[] sorted = geneticAlgorithm(cities);
 			
 			
 			// shuffle and add it to the array
@@ -132,17 +132,17 @@ public class Search {
 
 	}
 
-	public static City[] genetic(City[] cities) {
+	public static City[] geneticAlgorithm(City[] cities) {
 		int populationSize 	= 100;
 		int eliteSize 		= 20;
 		double mutationRate = 0.01;
 		int generations 	= 500;
 		
-		Population pop = new Population( populationSize, cities);
+		Population pop = new Population(populationSize, cities);
 		pop.rankIndividuals();
 		
 		for(int i = 0; i < generations; i++) {
-			pop = nextGeneration(pop, eliteSize, mutationRate);
+			pop = Population.nextGeneration(pop, eliteSize, mutationRate);
 		}
 		
 		return null;
