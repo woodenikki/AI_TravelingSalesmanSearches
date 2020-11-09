@@ -17,14 +17,14 @@ public class Population {
 		// this.sorted = new ArrayList<Individual>();
 
 		for (int i = 0; i < popSize; i++) {
-			population.add(new Individual(cities));
+			population.add(new Individual(cities, i));
 		}
-
 	}
 
 	public Population(List<Individual> p) {
+		population = new ArrayList<Individual>();
 		for(int i = 0; i < p.size(); i++) {
-			this.population.add(new Individual(p.get(i)));
+			this.population.add(new Individual(p.get(i), p.get(i).getIndex()));
 		}
 	}
 
@@ -40,7 +40,7 @@ public class Population {
 	public static Population nextGeneration(Population currentGen, int eliteSize, double mutationRate) {
 
 		Population popRanked = rankIndividuals(currentGen);
-		List<Integer> selectionResults = selection(popRanked, eliteSize); // returns list of indexes for population!!!
+		List<Integer> selectionResults = selection(popRanked, eliteSize); //returns list of indexes for population!!!
 		Population matingpool = matingPool(currentGen, selectionResults);
 		Population children = breedPopulation(matingpool, eliteSize);
 		Population nextGeneration = mutatePopulation(children, mutationRate);
@@ -49,18 +49,6 @@ public class Population {
 	}
 
 	// ****************** METHODS USED IN NEXTGENERATION() ***********************//
-	 public Population rankIndividuals() { 
-		 List<Individual> sorted = new ArrayList<Individual>(); 
-		 //copy population into sorted 
-		 for(int i = 0; i < population.size(); i++) {
-			 sorted.add(population.get(i)); 
-			 }
-	 
-		 Comparator<Individual> compareByFitness = (Individual o1, Individual o2) ->
-		 Double.compare(o1.getFitness(), o2.getFitness()); Collections.sort(sorted, compareByFitness.reversed());
-	 
-		 return new Population(sorted); 
-	 }
 	
 	public static Population rankIndividuals(Population pop) {
 		List<Individual> ranked = new ArrayList<Individual>();
@@ -79,7 +67,7 @@ public class Population {
 			rankedWithIndex.add(new Individual(ranked.get(i), i));
 		}
 
-		return new Population(ranked);
+		return new Population(rankedWithIndex);
 	}
 
 	public static List<Integer> selection(Population popRanked, int eliteSize) {
@@ -107,7 +95,7 @@ public class Population {
 																		// percentage...?
 			int pick = (int) (100 * Math.random());
 			for (int j = 0; j < popRanked.population.size(); j++) {
-				if (pick <= df.get(j)) {
+				if (pick <= df.get(popRanked.population.get(i).getIndex())) { //TODO: df.get(j) is NOT the index!!!!
 					selectionResults.add(popRanked.population.get(j).getIndex());
 					break;
 				}
@@ -121,9 +109,10 @@ public class Population {
 	public static Population matingPool(Population generation, List<Integer> selectionResults) {
 		List<Individual> matingpool = new ArrayList<Individual>();
 		int index;
+		
 		for (int i = 0; i < selectionResults.size(); i++) {
 			index = selectionResults.get(i);
-			matingpool.add(generation.population.get(index));
+			matingpool.add(generation.population.get(index)); //TODO: this line bad
 		}
 
 		return new Population(matingpool);
@@ -146,7 +135,7 @@ public class Population {
 		}
 
 		for (int i = 0; i < length; i++) {
-			Individual child = Individual.breed(pool.get(i), pool.get((matingpool.population.size() - i - 1)));
+			Individual child = Individual.breed(pool.get(i), pool.get((matingpool.population.size() - i - 1)), i);
 			children.add(child);
 		}
 

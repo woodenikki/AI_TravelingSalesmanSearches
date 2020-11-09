@@ -9,18 +9,19 @@ public class Individual {
 	double fitness;
 	int index;
 	
-	public Individual(City[] route) {
+	public Individual(City[] route, int index) {
 		this.route = createRoute(route);
 		this.distance = createRouteDistance();
 		this.fitness = createRouteFitness();
-		this.index = -1;
-		
+		this.index = index;
 	}
 	//copy constructor
 	public Individual(Individual ind) {
-		
+		this.route = new City[ind.getRoute().length];
 		for(int i = 0; i < ind.getRoute().length; i++) {
 			this.route[i] = new City(ind.getRoute()[i]);
+			
+			System.out.println(this.route[i].getX()+", "+this.route[i].getY());
 		}
 		
 		this.distance = ind.getDistance();
@@ -29,11 +30,12 @@ public class Individual {
 	}
 	
 	public Individual(Individual ind, int index) {
-	
+		this.route = new City[ind.getRoute().length];
+
 		for(int i = 0; i < ind.getRoute().length; i++) {
 			this.route[i] = new City(ind.getRoute()[i]);
 		}
-		
+
 		this.distance = ind.getDistance();
 		this.fitness = ind.getFitness();
 		this.index = index;
@@ -74,11 +76,9 @@ public class Individual {
 		}
 
 		for (int i = 0; i < cities.length; i++) {
-			randomized[i] = cities[indexes[i]];
+			randomized[i] = new City(cities[indexes[i]]);
 		}
-
 		return randomized;
-
 	}
 
 	public int createRouteDistance() {
@@ -87,13 +87,11 @@ public class Individual {
 		pathDistance = 0;
 
 		for (int i = 0; i < route.length; i++) {
-			City fromCity = this.route[i];
-			City toCity = null;
+			City fromCity = new City(route[i]);
+			City toCity = new City(route[0]);
 			if (i + 1 < route.length) {
-				toCity = route[i + 1];
-			} else {
-				toCity = route[0];
-			}
+				toCity = new City(route[i + 1]);
+			} 
 			pathDistance += fromCity.distance(toCity);
 		}
 		distance = pathDistance;
@@ -113,7 +111,7 @@ public class Individual {
 		int swapWith = (int) Math.random() * ind.getRoute().length;
 		
 		if( Math.random()*100 < mutationRate) {
-			City temp = ind.getRoute()[swap];
+			City temp = new City(ind.getRoute()[swap]);
 			ind.getRoute()[swap] = ind.getRoute()[swapWith];
 			ind.getRoute()[swapWith] = temp;
 		}
@@ -123,7 +121,7 @@ public class Individual {
 		
 	}
 
-	public static Individual breed(Individual parent1, Individual parent2) {
+	public static Individual breed(Individual parent1, Individual parent2, int indexToPass) {
 		City[] child = new City[parent1.getRoute().length];
 		
 		//City[] childP1 = new City[parent1.getRoute().length];
@@ -136,7 +134,7 @@ public class Individual {
 		int endGene = Math.max(geneA, geneB);
 		
 		for(int i = startGene; i < endGene; i++) {
-			child[i] = parent1.getRoute()[i];		
+			child[i] = parent1.route[i];		
 		}
 		
 		List<City> list = Arrays.asList(child);
@@ -151,7 +149,7 @@ public class Individual {
 				index++;
 			}
 		}
-		return new Individual(child);
+		return new Individual(child, indexToPass);
 	}
 
 }

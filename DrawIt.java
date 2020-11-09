@@ -129,6 +129,7 @@ public class DrawIt {
 
 			if(thingsToDraw.size() > 0) {
 				City [] c = thingsToDraw.remove();
+				if (c[c.length-2] == null) { System.out.println("BITCH"); }
 				if(c != null && c.length >= 2) {
 					//erase the background
 					g.setColor(Color.RED);
@@ -139,6 +140,7 @@ public class DrawIt {
 						City a = c[i-1];
 						City b = c[i];
 						g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
+						
 					}
 					//draw the final connection
 					g.drawLine(c[0].getX(), c[0].getY(), c[c.length-1].getX(), c[c.length-1].getY());

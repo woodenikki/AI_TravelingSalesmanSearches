@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Search {
 	
-	public static int SAP;		//Simulated Annealing Percentage
+	public static int SAP;				//Simulated Annealing Percentage
 	public static int temperature = 25;
 	
 	
@@ -24,7 +24,6 @@ public class Search {
 			
 			
 			// shuffle and add it to the array
-			
 			List<City> result = Arrays.asList(sorted);
 			//Collections.shuffle(result);
 			states.add(result.toArray(sorted));
@@ -139,13 +138,22 @@ public class Search {
 		int generations 	= 500;
 		
 		Population pop = new Population(populationSize, cities);
-		pop.rankIndividuals();
+		Population.rankIndividuals(pop);
+
 		
 		for(int i = 0; i < generations; i++) {
 			pop = Population.nextGeneration(pop, eliteSize, mutationRate);
 		}
 		
-		return null;
+		Population.rankIndividuals(pop);
+		int bestRouteIndex = pop.getPop().get(0).getIndex();
+		City[] bestRoute = new City[cities.length];
+		
+		for(int i = 0; i < cities.length; i++) {
+			bestRoute[i] = pop.population.get(bestRouteIndex).route[i];
+		}
+		
+		return bestRoute;
 	}
 	
 	
