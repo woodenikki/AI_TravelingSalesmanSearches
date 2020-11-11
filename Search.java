@@ -14,20 +14,20 @@ public class Search {
 	public static ArrayList<City[]> search(City[] cities) {
 		ArrayList<City[]> states = new ArrayList<City[]>();
 		
-		System.out.println("___________________________________");
+		//System.out.println("___________________________________");
 		SAP = 100;
-		for (int i = 0; i < 10; i++) {
-			// Create a copy
-			//City[] sorted = hillClimb(cities);
-			//City[] sorted = simAnneal(cities, SAP);
-			City[] sorted = geneticAlgorithm(cities);
-			
-			
-			// shuffle and add it to the array
-			List<City> result = Arrays.asList(sorted);
-			//Collections.shuffle(result);
-			states.add(result.toArray(sorted));
-		}
+		//City[] sorted = hillClimb(cities);
+		//City[] sorted = simAnneal(cities, SAP);
+		City[] sorted = geneticAlgorithm(cities);
+		
+		
+		
+		
+		
+		// shuffle and add it to the array
+		List<City> result = Arrays.asList(sorted);
+		//Collections.shuffle(result);
+		states.add(result.toArray(sorted));
 
 		return states;
 	}
@@ -142,7 +142,9 @@ public class Search {
 
 		
 		for(int i = 0; i < generations; i++) {
+			System.out.println(pop.getPop().get(0).getDistance());
 			pop = Population.nextGeneration(pop, eliteSize, mutationRate);
+			
 		}
 		
 		Population.rankIndividuals(pop);

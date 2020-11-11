@@ -39,12 +39,18 @@ public class Population {
 	// nextGeneration(pop, eliteSize, mutationRate);
 	public static Population nextGeneration(Population currentGen, int eliteSize, double mutationRate) {
 
+		
+		
 		Population popRanked = rankIndividuals(currentGen);
+		System.out.println(popRanked.getPop().get(0).getDistance());
 		List<Integer> selectionResults = selection(popRanked, eliteSize); //returns list of indexes for population!!!
-		Population matingpool = matingPool(currentGen, selectionResults);
+		Population matingpool = matingPool(popRanked, selectionResults);
+		System.out.println(matingpool.getPop().get(0).getDistance());
 		Population children = breedPopulation(matingpool, eliteSize);
+		System.out.println(children.getPop().get(0).getDistance());
 		Population nextGeneration = mutatePopulation(children, mutationRate);
-
+		System.out.println(nextGeneration.getPop().get(0).getDistance());
+		
 		return nextGeneration;
 	}
 
